@@ -27,12 +27,25 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: cotoirojp/eol-check-action@<40 桁のコミット SHA> # v1.0.1
+      - uses: cotoirojp/eol-check-action@<40 桁のコミット SHA> # v1.0.2
         with:
           app-url: https://eolcheck.cotoiro.jp
 ```
 
 `on:` の書き方は EOL check の「リポジトリ」画面で、リポジトリごとのものを確認できます。
+
+### 更新を Dependabot に任せる
+
+リポジトリに `.github/dependabot.yml` として次の内容を追加すると、このアクションの新しい版が出たときに、SHA を新しいものに替える PR が Dependabot から届きます。PR を取り込めば更新は終わりです。すでに `.github/dependabot.yml` があるときは、`updates:` に `github-actions` の項目だけを足してください。
+
+```yaml
+version: 2
+updates:
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+```
 
 ## 仕組み
 

@@ -185,6 +185,11 @@ function fail(message) {
   process.exitCode = 1;
 }
 
+/** Data of a GitHub workflow command (`::warning::...`): one line, with `%` escaped. */
+export function escapeCommandData(s) {
+  return s.replace(/%/g, '%25').replace(/\r/g, '%0D').replace(/\n/g, '%0A');
+}
+
 function validAppUrl(u) {
   return /^https:\/\//.test(u) || /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?(\/|$)/.test(u);
 }
@@ -293,6 +298,9 @@ export async function main(env = process.env) {
   const message = reply && typeof reply.message === 'string' ? reply.message : '';
   console.log(`応答: HTTP ${res.status}${reply && reply.status ? ` / ${reply.status}` : ''}${message ? ` / ${message}` : ''}`);
   if (reply && typeof reply.result === 'string') console.log(`結果: ${reply.result}`);
+  // The job succeeds on these replies, so the service asks for an annotation on the run when the user has to do something
+  // (e.g. the registration is pending and needs a manual run).
+  if (reply && reply.warning === true && message) console.log(`::warning title=EOL check::${escapeCommandData(message)}`);
   // Only these are failures (design 6.1: everything else succeeds, e.g. skipped / unchanged / deferred / 404).
   if (res.status === 413 || res.status === 429 || res.status === 401 || res.status >= 500) process.exitCode = 1;
 }
