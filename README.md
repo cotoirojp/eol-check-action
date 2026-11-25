@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: cotoirojp/eol-check-action@<40 桁のコミット SHA> # v1.0.0
+      - uses: cotoirojp/eol-check-action@<40 桁のコミット SHA> # v1.0.1
         with:
           app-url: https://eolcheck.cotoiro.jp
 ```
